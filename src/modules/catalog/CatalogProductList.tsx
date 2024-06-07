@@ -1,18 +1,30 @@
 import Typo from "../../components/Typo.tsx";
-import {ProductsFilterType, ProductType} from "./types.ts";
-import {BaseSyntheticEvent, memo, useMemo, useState} from "react";
+import {ProductsFilterType, ProductType, ProductWithUserType, UserType} from "./types.ts";
+import {memo, useCallback, useEffect, useMemo, useState} from "react";
+import CatalogProductListItem from "./CatalogProductListItem.tsx";
+import {getProducts} from "./services.ts";
+import {attachUsersToProducts} from "./methods.ts";
+import {useStateWithPreviousValue} from "../../hooks/useStateWithPreviousValue.ts";
 
 interface Props {
     filter: ProductsFilterType
-    products: ProductType[]
+    users: UserType[]
 }
 
 
 const CatalogProductList: React.FC<Props> = props => {
 
 
-    const {products: productsFromServer, filter} = props
-    const [products, setProducts] = useState<ProductType[]>(productsFromServer);
+    const {filter, users} = props
+    const [products, setProducts, prevProducts] = useStateWithPreviousValue<ProductWithUserType[]>([]);
+    useEffect(() => {
+        const getData = async  () => {
+            const productsData = await getProducts()
+
+            setProducts(attachUsersToProducts(productsData, users))
+        }
+        getData()
+    }, []);
     // const [counter, setCounter] = useState<number>(0);
     //
     // useEffect(() => {
@@ -23,7 +35,10 @@ const CatalogProductList: React.FC<Props> = props => {
     //
     // }, [counter]);
 
-    const productsFilterFunc = (product: ProductType) => {
+    useEffect(() => {
+        console.log(products, prevProducts, 'prods')
+    }, [products]);
+    const productsFilterFunc = (product: ProductWithUserType) => {
         let isCorrect = false
         if (filter.material !== undefined) {
             isCorrect = product.name.includes(filter.material)
@@ -37,29 +52,25 @@ const CatalogProductList: React.FC<Props> = props => {
         }
         isCorrect = product.name.includes(filter.searchField)
 
-        setTimeout(() => {
-            console.log('filtred')
-        }, 500)
 
-        return <></>
+        return isCorrect
 
     }
     const filteredProducts =
         useMemo(() =>
-        products.filter(productsFilterFunc)
-        ,
-        [filter])
-    console.log(filteredProducts, 'rerender')
+                products.filter(productsFilterFunc)
+            ,
+            [filter, products, users])
 
-    const handleChangeCheckbox = (e:BaseSyntheticEvent, productId: number) => {
-        console.log(e)
-        setProducts(products.map(product => product.id === productId ? ({...product, isChecked: e.target.checked}) : product))
-    }
+    const handleChangeCheckbox = useCallback((checked: boolean, productId: number) => {
+
+        setProducts(products.map(product => product.id === productId ? ({...product, isChecked: checked}) : product))
+    }, [products, users])
     return <>
         <Typo value={'products'} variant={"title"}/>
 
-        {filteredProducts.map((product) => <div key={product.id}>
-            {product.id + 1}: {product.name}<input onChange={(event:BaseSyntheticEvent) => handleChangeCheckbox(event, product.id)} checked={product.isChecked} type='checkbox'/></div>)}
+        {filteredProducts.map((product) =>
+           <CatalogProductListItem key={product.id} product={product} onProductCheck={handleChangeCheckbox}/>)}
     </>
 }
 

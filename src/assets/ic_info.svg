@@ -1,0 +1,6 @@
+<svg id="ic_info" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <path id="Path_1069" data-name="Path 1069" d="M0,24V0H24V24Z" fill="none"/>
+  <g id="Group_2908" data-name="Group 2908" transform="translate(2.25 2.25)">
+    <path id="Path_1070" data-name="Path 1070" d="M25.875,16.125a9.75,9.75,0,1,0,9.75,9.75A9.761,9.761,0,0,0,25.875,16.125Zm0,1.5a8.25,8.25,0,1,1-8.25,8.25A8.24,8.24,0,0,1,25.875,17.625Zm-.75,3.75v1.5h1.5v-1.5Zm0,3v6h1.5v-6Z" transform="translate(-16.125 -16.125)" fill="#5791e8"/>
+  </g>
+</svg>

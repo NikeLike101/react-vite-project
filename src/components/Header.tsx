@@ -1,32 +1,31 @@
 import Button from "./Button.tsx";
 import {OpenedPageType} from "../App.tsx";
+import {useContext} from "react";
+import ThemedContext from "../globalContexts/ThemedContext.tsx";
+import {ThemeEnum} from "../utils/globalTypes.ts";
+import {useNavigate} from "react-router-dom";
 
 
 
-interface Props {
-    onChangePage: (newPage: OpenedPageType) => void
-}
-const Header = ({onChangePage}: Props) => {
+const Header = () => {
+
+    const {theme, setTheme} = useContext(ThemedContext)
 
 
-    const handleSwitchTheme = () => {
-        const theme  = localStorage.getItem('theme') || 'light'
-        console.log('switch theme',theme)
-        if (theme === 'light') {
-            localStorage.setItem('theme', 'dark')
-            return;
-        }
-        localStorage.setItem('theme', 'light')
-    }
+    const navigation = useNavigate()
+    const handleSwitchTheme = () => setTheme(theme === ThemeEnum.light ? ThemeEnum.dark : ThemeEnum.light)
 
-    const handleOpenHome = () => onChangePage('home')
-    const handleOpenCatalog = () => onChangePage('catalog')
+    const handleOpenHome = () => navigation('/home')
+        // onChangePage('home')
+    const handleOpenCatalog = () => navigation('/catalog')
+        // onChangePage('catalog')
+
 
 
 
     return <div style={{display: 'flex', gap: '8px', padding: 8, borderBottom: '3px solid #CCC', marginBottom: 12}}>
-        <Button title="Home page" onClick={handleOpenHome}/>
-        <Button title="Catalog page" onClick={handleOpenCatalog}/>
+        <Button title="Home page" link={'/home'} onClick={handleOpenHome}/>
+        <Button title="Catalog page" link={'/catalog'} onClick={handleOpenCatalog}/>
         <Button title="Switch theme" onClick={handleSwitchTheme}/>
     </div>
 }

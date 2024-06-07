@@ -1,18 +1,27 @@
 import Typo from "./Typo"
-import React from "react";
+import React, {useContext} from "react";
+import ThemedContext from "../globalContexts/ThemedContext.tsx";
+import {ThemeEnum} from "../utils/globalTypes.ts";
+import {useMatch} from "react-router-dom";
 
 
 export interface ButtonProps {
     title: string
     onClick: () => void
+    link?: string
     showLabel?: boolean
     customStyle?:  React.CSSProperties
+
 }
 
 
 const Button = (props:ButtonProps) => {
-    const {onClick,title, showLabel, customStyle} = props
+    const {onClick,title, showLabel,link, customStyle} = props
 
+    const match = useMatch(link || '')
+
+
+    const {theme}= useContext(ThemedContext)
 
     const handleClick = () => {
         console.log('privet from' , title)
@@ -22,11 +31,20 @@ const Button = (props:ButtonProps) => {
         // if (showLabel) return <Typo value={title}/>
         // }
 
+    const getNewThemeStyle = () => {
+        if (match) return  {backgroundColor: '#ff0'}
+        if (customStyle) return customStyle
+        if (theme === ThemeEnum.dark) {
+            return {backgroundColor: 'black', color: 'white'}
+        }
+        return {backgroundColor: 'white', color: 'black'}
+    }
+
 
     return <div>
         {showLabel && <Typo value={title} customStyle={customStyle}/> }
         {/*{renderLabel()}*/}
-    <input className="button" onClick={handleClick} style={customStyle} type="button" value={title}/></div>
+    <input className="button" onClick={handleClick} style={getNewThemeStyle()} type="button" value={title}/></div>
 }
 
 

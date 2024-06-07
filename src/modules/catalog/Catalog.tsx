@@ -1,14 +1,17 @@
 import {ThemedTypo} from "../../components/hocs/themeHoc.tsx";
 import CatalogProductList from "./CatalogProductList.tsx";
 import CatalogFilterForm from "./CatalogFilterForm.tsx";
-import {ProductsFilterType, ProductType} from "./types.ts";
-import {generateProductName} from "./methods.ts";
-import {useState} from "react";
+import {ProductsFilterType, ProductType, UserType} from "./types.ts";
+import {useEffect, useRef, useState} from "react";
+import InputWithRef from "../../components/InputWithRef.tsx";
+import Button from "../../components/Button.tsx";
+import {getUsers} from "./services.ts";
+import Header from "../../components/Header.tsx";
+import useQueryExtended from "../../hooks/useQueryExtended.ts";
+import {useDidUpdate} from "../../hooks/useDidUpdate.ts";
+import {useLocation, useMatch} from "react-router-dom";
 
 
-const products: ProductType[] =
-    Array.from({length: 600})
-        .map((_product, index) => ({id: index, isChecked: false, name: generateProductName(index)}))
 
 
 export  const initialFilterValue:ProductsFilterType = {
@@ -22,42 +25,59 @@ interface Props {
 }
 const Catalog =(props: Props) => {
     const [filter, setFilter] = useState<ProductsFilterType>(initialFilterValue);
+    const inputRef = useRef<HTMLInputElement>(null)
 
 
-    // useEffect(() => {
-    //     console.log('catalog effect!')
-    //
-    //
-    //     return () => {
-    //         console.log('compnonent destroy:(')
-    //     }
-    // }, [])
-    // useEffect(() => {
-    //     if (selectedMaterial === undefined) return;
-    //     console.log('selected material changed!', selectedMaterial)
-    // },[selectedMaterial])
-    // useEffect(() => {
-    //     console.log('title of component changed', props.title)}, [props.title])
-    // useEffect(() => {
-    //
-    // }, [selectedMaterial, searchFieldValue, props.title])
+    const {data:dataUsers , getData:fetchUsers, isLoading:isLoadingUsers, }  = useQueryExtended(getUsers)
+    const location = useLocation()
 
 
+    useEffect(() => {
+        // const getData = async () => {
+        // try {
+        //     setIsLoading(true)
+        //
+        //     setUsers(usersData)
+        //     setIsLoading(false)
+        // } catch (err) {
+        //     alert(err)
+        // }
+        //
+        // }
+        //
+        // getData()
+
+    }, []);
+
+    useDidUpdate(() => {
+        console.log(dataUsers, 'users')
+
+    }, [dataUsers]);
     const handleFilter = (newFilter:ProductsFilterType) => {
         console.log(newFilter, 'filter')
         setFilter(newFilter)
+        fetchUsers()
     }
 
 
 
+
+
     return <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-
         <ThemedTypo value={props.title}/>
+        <InputWithRef inputRef={inputRef}/>
+        <Button
+            onClick={() => {
 
+                console.log(inputRef.current)
+                handleFilter({...filter, searchField: inputRef.current?.value || ''})
+            }}
+            title={'find'}
+        />
 
        <CatalogFilterForm onFilterChange={handleFilter}/>
 
-        <CatalogProductList filter={filter} products={products}/>
+        {isLoadingUsers || dataUsers === null ? 'loading...': <CatalogProductList users={dataUsers} filter={filter}/>}
     </div>
 }
 

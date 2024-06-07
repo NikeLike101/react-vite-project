@@ -4,6 +4,8 @@ import {useEffect, useMemo, useState} from "react";
 import {ProductsFilterType} from "./types.ts";
 import {material, names} from "../../constants.ts";
 import {initialFilterValue} from "./Catalog.tsx";
+import useDebounce from "../../hooks/useDebounce.ts";
+import usePrevious from "../../hooks/usePrevious.ts";
 
 interface Props {
     onFilterChange: (filter: ProductsFilterType) => void
@@ -22,13 +24,27 @@ const CatalogFilterForm: React.FC<Props> = props => {
 
     const [counter, setCounter] = useState<number>(0);
 
-    useEffect(() => {
+    const prevSearchVal = usePrevious<string>(searchFieldValue)
+
+    const debouncedSearchFieldValue = useDebounce(searchFieldValue, 500)
+
+     useEffect(() => {
+
        setTimeout(() => {
             setCounter(counter + 1)
         }, 1000)
 
 
     }, [counter]);
+
+    useEffect(() => {
+        console.log(searchFieldValue, prevSearchVal, 'normal')
+    }, [searchFieldValue]);
+
+
+    // useEffect(() => {
+    //     console.log(debouncedSearchFieldValue, 'debounced')
+    // }, [debouncedSearchFieldValue]);
 
     // useEffect(() => {
     //
@@ -53,13 +69,13 @@ const CatalogFilterForm: React.FC<Props> = props => {
     }
 
     const handleApply = () => {
-        setPrevSearchFieldValue(searchFieldValue)
+        setPrevSearchFieldValue(debouncedSearchFieldValue)
         setPrevSelectedMaterial(selectedMaterial)
         setPrevSelectedNameOfProduct(selectedNameOfProduct)
         onFilterChange({
             material: selectedMaterial,
             name: selectedNameOfProduct,
-            searchField: searchFieldValue,
+            searchField: debouncedSearchFieldValue,
         })
     }
 
@@ -74,14 +90,14 @@ const CatalogFilterForm: React.FC<Props> = props => {
         onFilterChange(initialFilterValue)
     }
 
-    const isDisabledClearButton = searchFieldValue === '' && selectedMaterial === undefined && selectedNameOfProduct === undefined
+    const isDisabledClearButton = debouncedSearchFieldValue === '' && selectedMaterial === undefined && selectedNameOfProduct === undefined
     const isDisabledApplyButton = useMemo(() => {
-        console.log('changed')
-        return searchFieldValue === prevSearchFieldValue &&
+
+        return debouncedSearchFieldValue === prevSearchFieldValue &&
             selectedMaterial === prevSelectedMaterial &&
             selectedNameOfProduct === prevSelectedNameOfProduct
 
-    }  , [searchFieldValue, prevSelectedNameOfProduct, selectedMaterial, selectedNameOfProduct, prevSearchFieldValue, prevSelectedMaterial])
+    }  , [debouncedSearchFieldValue, prevSelectedNameOfProduct, selectedMaterial, selectedNameOfProduct, prevSearchFieldValue, prevSelectedMaterial])
     return <div style={{background: '#2d0070', color: '#ddd', padding: '10px'}}>
 
         {counter}
