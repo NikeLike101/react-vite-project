@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {ProductType, UserType} from "../types.ts";
 import {getProductsBySellerId, getUser} from "../services.ts";
 import Button from "../../../components/Button.tsx";
+import {useSelector} from "react-redux";
 
 interface Props {
 
@@ -10,20 +11,19 @@ interface Props {
 
 const Seller:React.FC<Props> = props => {
 
+    const {products} = useSelector(state => state)
+    console.log(products, 'redux!')
     const {sellerId} = useParams()
-    console.log(match)
+
     const navigate = useNavigate()
     const [user, setUser] = useState<UserType | null>(null);
-    const [products, setProducts] = useState<ProductType[]>([]);
     useEffect(() => {
         if (sellerId === undefined) return
 
         const getData = async () => {
             const userData  = await getUser(sellerId)
             setUser(userData)
-            const productsData = await getProductsBySellerId(Number(sellerId))
-            console.log(productsData)
-            setProducts(productsData)
+
 
         }
         getData()
@@ -38,7 +38,7 @@ const Seller:React.FC<Props> = props => {
         seller! {user?.username}
         <br/>
         products of seller:
-        {products.map(product => <div>{product.name}</div>)}
+        {products.filter(product => product.user.id === user.id).map(product => <div>{product.name}</div>)}
 
     </>
 }

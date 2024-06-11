@@ -3,6 +3,8 @@ import React, {useContext} from "react";
 import ThemedContext from "../globalContexts/ThemedContext.tsx";
 import {ThemeEnum} from "../utils/globalTypes.ts";
 import {useMatch} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {useAppSelector} from "../redux";
 
 
 export interface ButtonProps {
@@ -21,7 +23,8 @@ const Button = (props:ButtonProps) => {
     const match = useMatch(link || '')
 
 
-    const {theme}= useContext(ThemedContext)
+
+    const {theme} = useAppSelector((state) => state.themeReducer)
 
     const handleClick = () => {
         console.log('privet from' , title)

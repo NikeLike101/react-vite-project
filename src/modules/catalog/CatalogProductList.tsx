@@ -1,10 +1,12 @@
 import Typo from "../../components/Typo.tsx";
-import {ProductsFilterType, ProductType, ProductWithUserType, UserType} from "./types.ts";
+import {ProductsFilterType, ProductWithUserType, UserType} from "./types.ts";
 import {memo, useCallback, useEffect, useMemo, useState} from "react";
 import CatalogProductListItem from "./CatalogProductListItem.tsx";
 import {getProducts} from "./services.ts";
 import {attachUsersToProducts} from "./methods.ts";
-import {useStateWithPreviousValue} from "../../hooks/useStateWithPreviousValue.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {setProducts} from "../../redux/reducers/catalogReducer/actions.ts";
+import {useAppSelector} from "../../redux";
 
 interface Props {
     filter: ProductsFilterType
@@ -16,12 +18,15 @@ const CatalogProductList: React.FC<Props> = props => {
 
 
     const {filter, users} = props
-    const [products, setProducts, prevProducts] = useStateWithPreviousValue<ProductWithUserType[]>([]);
+
+    const {products} = useAppSelector(state => state.catalogReducer)
+    const dispatch = useDispatch()
+
     useEffect(() => {
         const getData = async  () => {
             const productsData = await getProducts()
 
-            setProducts(attachUsersToProducts(productsData, users))
+            dispatch(setProducts(attachUsersToProducts(productsData, users)))
         }
         getData()
     }, []);
@@ -35,9 +40,6 @@ const CatalogProductList: React.FC<Props> = props => {
     //
     // }, [counter]);
 
-    useEffect(() => {
-        console.log(products, prevProducts, 'prods')
-    }, [products]);
     const productsFilterFunc = (product: ProductWithUserType) => {
         let isCorrect = false
         if (filter.material !== undefined) {
@@ -71,6 +73,8 @@ const CatalogProductList: React.FC<Props> = props => {
 
         {filteredProducts.map((product) =>
            <CatalogProductListItem key={product.id} product={product} onProductCheck={handleChangeCheckbox}/>)}
+
+
     </>
 }
 

@@ -15,7 +15,7 @@ interface  Props {
 const CatalogProductListItem:React.FC<Props> = props => {
 
     const {onProductCheck,product} = props
-    const {theme} = useThemeContext()
+
     const navigate = useNavigate()
     const handleChangeCheckbox = (checked: boolean) => {
         onProductCheck(checked, product.id)

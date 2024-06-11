@@ -1,20 +1,21 @@
-import {useState} from "react";
-import Catalog from "./modules/catalog/Catalog";
-import Home from "./modules/home/Home";
-import Header from "./components/Header.tsx";
-import ThemedContext from "./globalContexts/ThemedContext.tsx";
-import {ThemeEnum} from "./utils/globalTypes.ts";
 import RouterComponent from "./router/RouterComponent.tsx";
+import { Provider } from "react-redux";
+import {persistor, store} from "./redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 
 export type OpenedPageType = 'home' | 'catalog'
 const App = () => {
-    const [theme, setTheme] = useState<ThemeEnum>(ThemeEnum.light);
+    // const [theme, setTheme] = useState<ThemeEnum>(ThemeEnum.light);
 
     return (
-        <ThemedContext.Provider value={{theme, setTheme}}>
+        <Provider store={store}>
+       <PersistGate loading={null} persistor={persistor}>
+        {/*<ThemedContext.Provider value={{theme, setTheme}}>*/}
             <RouterComponent/>
-        </ThemedContext.Provider>
+        {/*</ThemedContext.Provider>*/}
+       </PersistGate>
+        </Provider>
     );
 };
 

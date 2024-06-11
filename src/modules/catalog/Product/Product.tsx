@@ -1,3 +1,4 @@
+import {useSelector} from "react-redux";
 
 interface Props {
 
@@ -6,7 +7,6 @@ interface Props {
 const Product:React.FC<Props> = props => {
 
 
-    
     return <>product!</>
 }
 

@@ -8,7 +8,6 @@ import {useThemeContext} from "../globalContexts/ThemedContext.tsx";
 import {ThemeEnum} from "../utils/globalTypes.ts";
 import PrivatePage from "./PrivatePage.tsx";
 import {useMemo} from "react";
-import {renderPrivateRoutes} from "./privetRoutesGroups.tsx";
 
 const HomePage = () => <PageWrapper Component={Home}/>
 const CatalogPage =() => <PageWrapper Component={() => <Catalog title={'hello'}/>}/>
@@ -17,10 +16,10 @@ const SecretPage1 = () => <PageWrapper Component={() => <div>secret1!</div>}/>
 const SecretPage2 = () => <PageWrapper Component={() => <div>secret2!</div>}/>
 const SecretPage3 = () => <PageWrapper Component={() => <div>secret3!</div>}/>
 const RouterComponent = () => {
-    const {theme} = useThemeContext()
+    // const {theme} = useThemeContext()
 
 
-    const isEnabledDarkTheme = useMemo(() => theme ===ThemeEnum.dark, [theme])
+    const isEnabledDarkTheme = useMemo(() => true, [])
 
 
 
@@ -51,9 +50,7 @@ const RouterComponent = () => {
                            available={isEnabledDarkTheme}
                            Component={SecretPage3}/>}
             />
-            {/* v2*/}
-            {renderPrivateRoutes(isEnabledDarkTheme)}
-            {/* v3*/}
+           
             {isEnabledDarkTheme && <>
                 <Route path={'secret_page1'} Component={SecretPage1}/>
                 <Route path={'secret_page2'} Component={SecretPage2}/>

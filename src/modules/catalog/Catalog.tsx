@@ -10,6 +10,7 @@ import Header from "../../components/Header.tsx";
 import useQueryExtended from "../../hooks/useQueryExtended.ts";
 import {useDidUpdate} from "../../hooks/useDidUpdate.ts";
 import {useLocation, useMatch} from "react-router-dom";
+import {useSelector} from "react-redux";
 
 
 
@@ -24,6 +25,10 @@ interface Props {
     title: string
 }
 const Catalog =(props: Props) => {
+
+    const {products} = useSelector(state => state)
+    console.log(products, 'redux!')
+
     const [filter, setFilter] = useState<ProductsFilterType>(initialFilterValue);
     const inputRef = useRef<HTMLInputElement>(null)
 

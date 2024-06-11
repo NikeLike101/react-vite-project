@@ -1,6 +1,7 @@
 import {BaseSyntheticEvent, ChangeEvent, memo, useContext} from "react";
 import ThemedContext from "../globalContexts/ThemedContext.tsx";
 import {ThemeEnum} from "../utils/globalTypes.ts";
+import {useAppSelector} from "../redux";
 
 
 interface Props {
@@ -12,7 +13,8 @@ const Checkbox:React.FC<Props>  = props => {
     const {checked,onClick} = props
     // console.log('hello from checkbox')
 
-    const {theme} =  useContext(ThemedContext)
+
+    const {theme} = useAppSelector((state) => state.themeReducer)
     const handleToggle = (event: ChangeEvent<HTMLInputElement>) => {
         onClick(event.target.checked)
     }

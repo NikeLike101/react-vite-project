@@ -33,7 +33,6 @@ const themeHoc:ThemeHocType<any> = (Component) => {
         }
 
 
-        console.log(props, 'hoced props')
         return <div style={{display: 'flex'}}>
             Component: <Component {...props} customStyle={getNewThemeStyle()} />
 
