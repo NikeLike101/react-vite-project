@@ -5,6 +5,7 @@ import themeReducer from "./reducers/themeReducer.ts";
 import {TypedUseSelectorHook, useSelector} from "react-redux";
 import storage from "redux-persist/lib/storage";
 import {persistReducer, persistStore} from 'redux-persist'
+import {CatalogReducerActionTypesEnum} from "./reducers/catalogReducer/actionTypes.ts";
 
 const persistConfig = {
     key: 'redux',
@@ -21,6 +22,8 @@ const appReducer = combineReducers({
 })
 
 
+
+
 // @ts-ignore
 // const persistedReducer = persistReducer(persistConfig, appReducer)
 
@@ -31,7 +34,10 @@ export const store = configureStore({
 })
 
 
-export const persistor = persistStore(store)
+// export const persistor = persistStore(store)
+
+
+export type ActionType<EnumOfTypes> = {type: EnumOfTypes | string, payload: any }
 
 
 type AppStateType = ReturnType<typeof appReducer>

@@ -1,26 +1,26 @@
 import Input from "../../components/Input.tsx";
 import Select from "../../components/Select.tsx";
 import {useEffect, useMemo, useState} from "react";
-import {ProductsFilterType} from "./types.ts";
-import {material, names} from "../../constants.ts";
-import {initialFilterValue} from "./Catalog.tsx";
+import {materials, names} from "../../constants.ts";
 import useDebounce from "../../hooks/useDebounce.ts";
 import usePrevious from "../../hooks/usePrevious.ts";
+import {useAppSelector} from "../../redux";
+import {useDispatch} from "react-redux";
+import {setFilter} from "../../redux/reducers/catalogReducer/actions.ts";
+import {initialFilterState} from "../../redux/reducers/catalogReducer/reducer.ts";
 
 interface Props {
-    onFilterChange: (filter: ProductsFilterType) => void
 }
 
-const CatalogFilterForm: React.FC<Props> = props => {
 
-    const {onFilterChange} = props
+const CatalogFilterForm: React.FC<Props> = () => {
 
+
+    const {name, material, searchField} = useAppSelector(state => state.catalogReducer.filter)
+    const dispatch = useDispatch()
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
-    const [prevSearchFieldValue, setPrevSearchFieldValue] = useState<string>('');
     const [selectedMaterial, setSelectedMaterial,] = useState<string | undefined>(undefined);
-    const [prevSelectedMaterial, setPrevSelectedMaterial,] = useState<string | undefined>(undefined);
     const [selectedNameOfProduct, setSelectedNameOfProduct,] = useState<string | undefined>(undefined);
-    const [prevSelectedNameOfProduct, setPrevSelectedNameOfProduct,] = useState<string | undefined>(undefined);
 
     const [counter, setCounter] = useState<number>(0);
 
@@ -28,9 +28,9 @@ const CatalogFilterForm: React.FC<Props> = props => {
 
     const debouncedSearchFieldValue = useDebounce(searchFieldValue, 500)
 
-     useEffect(() => {
+    useEffect(() => {
 
-       setTimeout(() => {
+        setTimeout(() => {
             setCounter(counter + 1)
         }, 1000)
 
@@ -69,35 +69,42 @@ const CatalogFilterForm: React.FC<Props> = props => {
     }
 
     const handleApply = () => {
-        setPrevSearchFieldValue(debouncedSearchFieldValue)
-        setPrevSelectedMaterial(selectedMaterial)
-        setPrevSelectedNameOfProduct(selectedNameOfProduct)
-        onFilterChange({
-            material: selectedMaterial,
+        dispatch(setFilter({
             name: selectedNameOfProduct,
-            searchField: debouncedSearchFieldValue,
-        })
+            searchField: searchFieldValue,
+            material: selectedMaterial
+        }))
     }
 
     const handleClear = () => {
         setSearchFieldValue('')
         setSelectedMaterial(undefined)
         setSelectedNameOfProduct(undefined)
-        setPrevSearchFieldValue('')
-        setPrevSelectedMaterial(undefined)
-        setPrevSelectedNameOfProduct(undefined)
+        dispatch(setFilter(initialFilterState))
 
-        onFilterChange(initialFilterValue)
     }
 
-    const isDisabledClearButton = debouncedSearchFieldValue === '' && selectedMaterial === undefined && selectedNameOfProduct === undefined
+    const isDisabledClearButton =
+        debouncedSearchFieldValue === '' &&
+        selectedMaterial === undefined &&
+        selectedNameOfProduct === undefined
+
+
     const isDisabledApplyButton = useMemo(() => {
 
-        return debouncedSearchFieldValue === prevSearchFieldValue &&
-            selectedMaterial === prevSelectedMaterial &&
-            selectedNameOfProduct === prevSelectedNameOfProduct
+        return debouncedSearchFieldValue === searchField &&
+            selectedMaterial === material &&
+            selectedNameOfProduct === name
 
-    }  , [debouncedSearchFieldValue, prevSelectedNameOfProduct, selectedMaterial, selectedNameOfProduct, prevSearchFieldValue, prevSelectedMaterial])
+    }, [
+        debouncedSearchFieldValue,
+        name,
+        selectedMaterial,
+        selectedNameOfProduct,
+        searchField, material
+    ])
+
+    
     return <div style={{background: '#2d0070', color: '#ddd', padding: '10px'}}>
 
         {counter}
@@ -108,16 +115,16 @@ const CatalogFilterForm: React.FC<Props> = props => {
             triggerValue={selectedMaterial}
             onChange={handleChangeMaterialSelect}
             label='chose material'
-            options={[...material]}/>
+            options={[...materials]}/>
 
 
-
-
-        <Select triggerValue={selectedNameOfProduct} onChange={handleChangeNameOfProductSelect} label='chose name of product' options={names}/>
+        <Select triggerValue={selectedNameOfProduct} onChange={handleChangeNameOfProductSelect}
+                label='chose name of product' options={names}/>
         <button onClick={handleClear} disabled={isDisabledClearButton}>clear</button>
         <button onClick={handleApply}
                 disabled={isDisabledApplyButton}
-        >apply</button>
+        >apply
+        </button>
 
     </div>
 }

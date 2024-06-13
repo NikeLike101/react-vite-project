@@ -1,15 +1,14 @@
 import Typo from "../../components/Typo.tsx";
-import {ProductsFilterType, ProductWithUserType, UserType} from "./types.ts";
-import {memo, useCallback, useEffect, useMemo, useState} from "react";
+import {ProductWithUserType, UserType} from "./types.ts";
+import {memo, useCallback, useEffect, useMemo} from "react";
 import CatalogProductListItem from "./CatalogProductListItem.tsx";
 import {getProducts} from "./services.ts";
 import {attachUsersToProducts} from "./methods.ts";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {setProducts} from "../../redux/reducers/catalogReducer/actions.ts";
 import {useAppSelector} from "../../redux";
 
 interface Props {
-    filter: ProductsFilterType
     users: UserType[]
 }
 
@@ -17,9 +16,10 @@ interface Props {
 const CatalogProductList: React.FC<Props> = props => {
 
 
-    const {filter, users} = props
+    const { users} = props
 
-    const {products} = useAppSelector(state => state.catalogReducer)
+
+    const {products, filter} = useAppSelector(state => state.catalogReducer)
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -64,9 +64,11 @@ const CatalogProductList: React.FC<Props> = props => {
             ,
             [filter, products, users])
 
-    const handleChangeCheckbox = useCallback((checked: boolean, productId: number) => {
-
-        setProducts(products.map(product => product.id === productId ? ({...product, isChecked: checked}) : product))
+    const handleChangeCheckbox = useCallback(
+        (checked: boolean, productId: number) => {
+        dispatch(setProducts(
+            products
+                .map(product => product.id === productId ? ({...product, isChecked: checked}) : product)))
     }, [products, users])
     return <>
         <Typo value={'products'} variant={"title"}/>

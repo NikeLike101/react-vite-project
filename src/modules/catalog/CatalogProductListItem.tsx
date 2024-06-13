@@ -5,6 +5,8 @@ import {ReactComponent as IconInfo} from '../../assets/ic_success.svg'
 import {useNavigate} from "react-router-dom";
 import {useThemeContext} from "../../globalContexts/ThemedContext.tsx";
 import {ThemeEnum} from "../../utils/globalTypes.ts";
+import {useDispatch} from "react-redux";
+import {setSelectedProductForModal} from "../../redux/reducers/catalogReducer/actions.ts";
 
 interface  Props {
     product: ProductWithUserType
@@ -15,6 +17,7 @@ interface  Props {
 const CatalogProductListItem:React.FC<Props> = props => {
 
     const {onProductCheck,product} = props
+const dispatch = useDispatch()
 
     const navigate = useNavigate()
     const handleChangeCheckbox = (checked: boolean) => {
@@ -26,6 +29,10 @@ const CatalogProductListItem:React.FC<Props> = props => {
         navigate(`/catalog/${product.user.id}`)
     }
 
+
+    const handleOpenProductModal = () => {
+        dispatch(setSelectedProductForModal(product))
+    }
 
     const randomValue = useMemo(() => Math.random(), [])
     const renderIconWithRandomColor = () => {
@@ -45,7 +52,7 @@ const CatalogProductListItem:React.FC<Props> = props => {
 
     return <div key={product.id}>
         {renderIconWithRandomColor()}
-        {product.id + 1}: {product.name}
+        {product.id + 1}: <span onClick={handleOpenProductModal}>{product.name}</span>
         <Checkbox
             checked={product.isChecked}
             onClick={handleChangeCheckbox}/>

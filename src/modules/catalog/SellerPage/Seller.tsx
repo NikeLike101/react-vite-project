@@ -1,19 +1,19 @@
-import {useMatch, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {ProductType, UserType} from "../types.ts";
-import {getProductsBySellerId, getUser} from "../services.ts";
+import {UserType} from "../types.ts";
+import {getUser} from "../services.ts";
 import Button from "../../../components/Button.tsx";
-import {useSelector} from "react-redux";
+import {useAppSelector} from "../../../redux";
 
 interface Props {
 
 }
 
-const Seller:React.FC<Props> = props => {
+const Seller:React.FC<Props> = () => {
 
-    const {products} = useSelector(state => state)
-    console.log(products, 'redux!')
+    const {products} = useAppSelector(state => state.catalogReducer)
     const {sellerId} = useParams()
+    console.log(products, sellerId, 'redux!')
 
     const navigate = useNavigate()
     const [user, setUser] = useState<UserType | null>(null);
@@ -38,7 +38,7 @@ const Seller:React.FC<Props> = props => {
         seller! {user?.username}
         <br/>
         products of seller:
-        {products.filter(product => product.user.id === user.id).map(product => <div>{product.name}</div>)}
+        {products.filter(product => product.user.id === user?.id).map(product => <div>{product.name}</div>)}
 
     </>
 }

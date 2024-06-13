@@ -1,8 +1,8 @@
-import {material, names} from "../../constants.ts";
+import {materials, names} from "../../constants.ts";
 import {ProductType, ProductWithUserType, UserType} from "./types.ts";
 
 export const generateProductName = (someIndex: number) => {
-    return `${material[Math.trunc(Math.random() * material.length)]} 
+    return `${materials[Math.trunc(Math.random() * materials.length)]} 
     ${
         names[Math.trunc(Math.random() * names.length)]} 
         -${someIndex}`

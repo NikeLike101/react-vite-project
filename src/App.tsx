@@ -1,7 +1,6 @@
 import RouterComponent from "./router/RouterComponent.tsx";
 import { Provider } from "react-redux";
-import {persistor, store} from "./redux";
-import { PersistGate } from "redux-persist/integration/react";
+import { store} from "./redux";
 
 
 export type OpenedPageType = 'home' | 'catalog'
@@ -10,11 +9,11 @@ const App = () => {
 
     return (
         <Provider store={store}>
-       <PersistGate loading={null} persistor={persistor}>
+       {/*<PersistGate loading={null} persistor={persistor}>*/}
         {/*<ThemedContext.Provider value={{theme, setTheme}}>*/}
             <RouterComponent/>
         {/*</ThemedContext.Provider>*/}
-       </PersistGate>
+       {/*</PersistGate>*/}
         </Provider>
     );
 };
