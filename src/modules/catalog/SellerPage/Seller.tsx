@@ -4,6 +4,8 @@ import {UserType} from "../types.ts";
 import {getUser} from "../services.ts";
 import Button from "../../../components/Button.tsx";
 import {useAppSelector} from "../../../redux";
+import { getReviewsSaga} from "../../../redux/saga/reviewsSaga.ts";
+import {useDispatch} from "react-redux";
 
 interface Props {
 
@@ -11,7 +13,8 @@ interface Props {
 
 const Seller:React.FC<Props> = () => {
 
-    const {products} = useAppSelector(state => state.catalogReducer)
+    const dispatch= useDispatch()
+    const {products, reviews} = useAppSelector(state => state.catalogReducer)
     const {sellerId} = useParams()
     console.log(products, sellerId, 'redux!')
 
@@ -20,14 +23,16 @@ const Seller:React.FC<Props> = () => {
     useEffect(() => {
         if (sellerId === undefined) return
 
+        dispatch(getReviewsSaga())
+        dispatch(getReviewsSaga(Number(sellerId)))
+
         const getData = async () => {
-            const userData  = await getUser(sellerId)
+            const userData  = await getUser(Number(sellerId))
             setUser(userData)
 
 
         }
         getData()
-
     }, []);
 
 
@@ -39,7 +44,9 @@ const Seller:React.FC<Props> = () => {
         <br/>
         products of seller:
         {products.filter(product => product.user.id === user?.id).map(product => <div>{product.name}</div>)}
-
+        <div>reviews:
+            {reviews.map(review => <div>{review.name}</div>)}
+        </div>
     </>
 }
 

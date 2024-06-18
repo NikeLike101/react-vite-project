@@ -2,43 +2,24 @@ import Typo from "../../components/Typo.tsx";
 import {ProductWithUserType, UserType} from "./types.ts";
 import {memo, useCallback, useEffect, useMemo} from "react";
 import CatalogProductListItem from "./CatalogProductListItem.tsx";
-import {getProducts} from "./services.ts";
-import {attachUsersToProducts} from "./methods.ts";
-import {useDispatch} from "react-redux";
-import {setProducts} from "../../redux/reducers/catalogReducer/actions.ts";
-import {useAppSelector} from "../../redux";
+import {fetchProducts, setProducts} from "../../redux/reducers/catalogReducer/actions.ts";
+import {useAppDispatch, useAppSelector} from "../../redux";
 
 interface Props {
-    users: UserType[]
 }
 
 
-const CatalogProductList: React.FC<Props> = props => {
+const CatalogProductList: React.FC<Props> = () => {
 
-
-    const { users} = props
 
 
     const {products, filter} = useAppSelector(state => state.catalogReducer)
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        const getData = async  () => {
-            const productsData = await getProducts()
-
-            dispatch(setProducts(attachUsersToProducts(productsData, users)))
-        }
-        getData()
+        dispatch(fetchProducts())
     }, []);
-    // const [counter, setCounter] = useState<number>(0);
-    //
-    // useEffect(() => {
-    //     const interval = setTimeout(() => {
-    //         setCounter(counter + 1)
-    //     }, 1000)
-    //
-    //
-    // }, [counter]);
+
 
     const productsFilterFunc = (product: ProductWithUserType) => {
         let isCorrect = false
@@ -62,14 +43,14 @@ const CatalogProductList: React.FC<Props> = props => {
         useMemo(() =>
                 products.filter(productsFilterFunc)
             ,
-            [filter, products, users])
+            [filter, products])
 
     const handleChangeCheckbox = useCallback(
         (checked: boolean, productId: number) => {
         dispatch(setProducts(
             products
                 .map(product => product.id === productId ? ({...product, isChecked: checked}) : product)))
-    }, [products, users])
+    }, [products])
     return <>
         <Typo value={'products'} variant={"title"}/>
 
