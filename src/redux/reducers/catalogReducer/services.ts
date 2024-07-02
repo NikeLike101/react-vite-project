@@ -1,8 +1,5 @@
 import {PhotoType} from "../productItemReducer/types.ts";
+import requestFetch from "../../../utils/requestFetch.ts";
 
-export const getProductPhotos =async (productId: number):Promise<PhotoType[]> => {
-    const data =await fetch(`https://jsonplaceholder.typicode.com/photos?albumId=${productId}`)
-    if (!data.ok) throw new Error('error')
-
-    return await data.json()
-}
+export const getProductPhotos =async (productId: number):Promise<PhotoType[]> =>
+    requestFetch({url:`https://jsonplaceholder.typicode.com/photos?albumId=${productId}`})

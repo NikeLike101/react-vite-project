@@ -6,6 +6,7 @@ import {fetchUsers} from "../../redux/reducers/catalogReducer/actions.ts";
 import ProductModal from "./ProductModal.tsx";
 import {useAppDispatch, useAppSelector} from "../../redux";
 import CatalogProductList from "./CatalogProductList.tsx";
+import {getBlogPostsTMS} from "./services.ts";
 
 const hello = () => console.log('hello')
 interface Props {
@@ -24,6 +25,7 @@ const {usersLoadingStatus,users} = useAppSelector(state => state.catalogReducer)
     useEffect(() => {
         // fetchUsers()
         dispatch(fetchUsers())
+        getBlogPostsTMS()
     }, []);
     //
     // useEffect(() => {

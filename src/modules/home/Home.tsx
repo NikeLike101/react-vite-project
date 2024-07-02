@@ -1,10 +1,11 @@
 import Button from "../../components/Button"
 import Typo from "../../components/Typo"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {ThemedButton, ThemedTypo} from "../../components/hocs/themeHoc.tsx";
 import {useNavigate} from "react-router-dom";
 import {setA, setB, setC} from "../../redux/reducers/charsReducer/actions.ts";
 import {useDispatch, useSelector} from "react-redux";
+import {getUserInfo} from "./service.ts";
 
 const Home = () => {
    const [counter, setCounter] = useState<number>(0)
@@ -28,6 +29,13 @@ const dispatch = useDispatch()
     console.log(counter, 'new value set')
 
 
+    useEffect(() => {
+       const getData = async  () => {
+           const data = await getUserInfo()
+           console.log(data)
+       }
+       getData()
+    }, []);
     const handleNavigateToCatalog = () => {
         navigation('/catalog')
     }

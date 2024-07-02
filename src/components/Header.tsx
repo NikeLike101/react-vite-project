@@ -1,30 +1,29 @@
 import Button from "./Button.tsx";
-import {OpenedPageType} from "../App.tsx";
-import {useContext} from "react";
-import ThemedContext from "../globalContexts/ThemedContext.tsx";
 import {ThemeEnum} from "../utils/globalTypes.ts";
 import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {changeTheme} from "../redux/reducers/themeReducer.ts";
 import {appReducer, AppStateType, useAppSelector} from "../redux";
-
 
 
 const Header = () => {
 
     const {b} = useAppSelector(state => state.charsReducer)
     const {theme} = useAppSelector((state) => state.themeReducer)
-const dispatch = useDispatch()
+    const dispatch = useDispatch()
 
     const navigation = useNavigate()
     const handleSwitchTheme = () => dispatch(changeTheme(theme === ThemeEnum.light ? ThemeEnum.dark : ThemeEnum.light))
 
     const handleOpenHome = () => navigation('/home')
-        // onChangePage('home')
+    // onChangePage('home')
     const handleOpenCatalog = () => navigation('/catalog')
-        // onChangePage('catalog')
+    // onChangePage('catalog')
 
-
+    const handleLogout = () => {
+        localStorage.removeItem('tokens')
+        navigation('/login')
+    }
 
 
     return <div style={{display: 'flex', gap: '8px', padding: 8, borderBottom: '3px solid #CCC', marginBottom: 12}}>
@@ -32,6 +31,7 @@ const dispatch = useDispatch()
         {b}
         <Button title="Catalog page" link={'/catalog'} onClick={handleOpenCatalog}/>
         <Button title="Switch theme" onClick={handleSwitchTheme}/>
+        <Button title={'Log out'} onClick={handleLogout}/>
     </div>
 }
 

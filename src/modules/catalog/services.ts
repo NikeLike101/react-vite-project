@@ -1,5 +1,6 @@
 import {ProductType, UserType} from "./types.ts";
 import {generateProductName} from "./methods.ts";
+import requestFetch, {MethodsEnum} from "../../utils/requestFetch.ts";
 
 const productsData = Array.from({length: 60})
     .map((_product, index) => ({
@@ -8,20 +9,16 @@ const productsData = Array.from({length: 60})
         name: generateProductName(index),
         userId:Math.trunc(Math.random()*9+1)
     }))
-export const getUsers =async ():Promise<UserType[]> => {
-    const data =await fetch('https://jsonplaceholder.typicode.com/users')
-    if (!data.ok) throw new Error('error')
+export const getUsers =async () =>
+    await requestFetch<UserType[]>({url: 'https://jsonplaceholder.typicode.com/users', method: MethodsEnum.get})
 
-    return await data.json()
-}
+export const getUser= async (userId: number):Promise<UserType> =>
+    (await requestFetch({url:`https://jsonplaceholder.typicode.com/users?id=${userId}`, method: MethodsEnum.get}))[0]
 
-export const getUser= async (userId: number):Promise<UserType> => {
-    const data =await fetch(`https://jsonplaceholder.typicode.com/users?id=${userId}`)
-    if (!data.ok) throw new Error('error')
-
-    const userDataInArray = await data.json()
-    return userDataInArray[0]
-}
+export const getBlogPostsTMS = () => requestFetch({
+    url: 'https://studapi.teachmeskills.by/blog/posts/',
+    method: MethodsEnum.get
+})
 
 export const getProducts = async ():Promise<ProductType[]> => {
 
