@@ -1,6 +1,6 @@
 import Typo from "./Typo"
 import React, {useContext} from "react";
-import ThemedContext from "../globalContexts/ThemedContext.tsx";
+import ThemedContext from "../redux/contexts/ThemedContext.tsx";
 import {ThemeEnum} from "../utils/globalTypes.ts";
 import {useMatch} from "react-router-dom";
 import {useSelector} from "react-redux";

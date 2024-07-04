@@ -1,5 +1,5 @@
 import {createContext, useContext} from "react";
-import {ThemeEnum} from "../utils/globalTypes.ts";
+import {ThemeEnum} from "../../utils/globalTypes.ts";
 
 type ThemeContextType = {
     theme: ThemeEnum,

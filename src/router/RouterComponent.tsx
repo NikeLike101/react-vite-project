@@ -4,18 +4,24 @@ import NotFound404 from "../utils/NotFound404.tsx";
 import Catalog from "../modules/catalog";
 import PageWrapper from "./PageWrapper.tsx";
 import Seller from "../modules/catalog/SellerPage";
-import {useThemeContext} from "../globalContexts/ThemedContext.tsx";
+import {useThemeContext} from "../redux/contexts/ThemedContext.tsx";
 import {ThemeEnum} from "../utils/globalTypes.ts";
 import PrivatePage from "./PrivatePage.tsx";
 import React, {useMemo} from "react";
 import {RoutesEnum} from "./routes.ts";
 import Login from "../modules/login/Login.tsx";
 import SignUp from "../modules/signUp/SignUp.tsx";
+import AuthPageWrapper from "./AuthPageWrapper.tsx";
+import LoginOriginal from "../modules/login_original/LoginOriginal.tsx";
+import SignUpOriginal from "../modules/signUp_original/signUpOriginal.tsx";
 
 const HomePage = () => <PageWrapper Component={Home}/>
 const CatalogPage =() => <PageWrapper Component={() => <Catalog title={'hello'}/>}/>
-const LoginPage =() =>  <Login/>
-const SignUpPage =() =>  <SignUp/>
+const LoginPage =() =>  <AuthPageWrapper Component={Login}/>
+const SignUpPage =() => <AuthPageWrapper Component={SignUp}/>
+
+const LoginOriginalPage =() =>  <AuthPageWrapper Component={LoginOriginal}/>
+const SignUpOriginalPage =() =>  <AuthPageWrapper Component={SignUpOriginal}/>
 
 const SecretPage1 = () => <PageWrapper Component={() => <div>secret1!</div>}/>
 const SecretPage2 = () => <PageWrapper Component={() => <div>secret2!</div>}/>
@@ -38,6 +44,8 @@ const RouterComponent = () => {
             <Route path={RoutesEnum.notFound} Component={NotFound404}/>
             <Route path={RoutesEnum.login} Component={LoginPage}/>
             <Route path={RoutesEnum.signup} Component={SignUpPage}/>
+            <Route path={RoutesEnum.login_original} Component={LoginOriginalPage}/>
+            <Route path={RoutesEnum.signup_original} Component={SignUpOriginalPage}/>
             {/* v1*/}
             {/*<Route path={'secret_page1'}*/}
             {/*       Component={() =>*/}

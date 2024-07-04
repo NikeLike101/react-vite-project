@@ -1,24 +1,23 @@
 import {Box, Button, Paper, TextField} from "@mui/material";
 import {useStyles} from "./styles.ts";
 import {useMemo} from "react";
-import {getTokens} from "./services.ts";
+// import {getTokens} from "./services.ts";
 import {RoutesEnum} from "../../router/routes.ts";
 import {useFormik} from "formik";
 import {useAppNavigate} from "../../hooks/useAppNavigate.ts";
-
-export const enum LoginFieldEnum {
-    username = 'username',
-    email = 'email',
-    password = 'password',
-}
+import useAuth from "../../hooks/useAuth.ts";
 
 
 const initialValues = {
-    email: '',
+    username: '',
     password: ''
 }
 
-const Login = () => {
+
+const SignUpOriginal = () => {
+    const {register} = useAuth()
+
+
 
     const random = Math.random() > 0.5
     const classes = useStyles(random)
@@ -29,12 +28,13 @@ const Login = () => {
         initialValues,
         onSubmit: async values => {
 
-
-            const data = await getTokens(values)
-
-
-            localStorage.setItem('tokens', JSON.stringify(data))
-            navigate(RoutesEnum.home)
+            register(values)
+            //
+            // const data = await getTokens(values)
+            //
+            //
+            // localStorage.setItem('tokens', JSON.stringify(data))
+            // navigate(RoutesEnum.home)
         }
     })
 
@@ -44,16 +44,16 @@ const Login = () => {
     }
 
 
-    const isDisabledSubmitButton = useMemo(() => formik.values.password.length === 0 || formik.values.email.length === 0, [formik.values.password, formik.values.email])
+    const isDisabledSubmitButton = useMemo(() => formik.values.password.length === 0 || formik.values.username.length === 0, [formik.values.password, formik.values.username])
 
     return <>
         <Box sx={classes.wrapper}>
             <Paper sx={{padding: '10px', display: 'flex', flexDirection: 'column', gap: '10px'}}>
                 <TextField
-                    name={'email'}
-                    value={formik.values.email}
+                    name={'username'}
+                    value={formik.values.username}
                     onChange={formik.handleChange}
-                    label={'email'}
+                    label={'username'}
                     sx={classes.input}/>
                 <TextField
                     name={'password'}
@@ -64,11 +64,12 @@ const Login = () => {
                     sx={classes.input}/>
                 <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
                     {/*<Button variant={"contained"}>cancel</Button>*/}
+                    <Button variant={"text"} onClick={() => navigate(RoutesEnum.login_original)}>log in</Button>
                     <Button variant={"contained"} onClick={handleDone} disabled={isDisabledSubmitButton}>enter</Button>
                 </Box>
             </Paper>
         </Box>
     </>
-}
 
-export default Login
+}
+export default SignUpOriginal

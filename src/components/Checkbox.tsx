@@ -1,5 +1,5 @@
 import {BaseSyntheticEvent, ChangeEvent, memo, useContext} from "react";
-import ThemedContext from "../globalContexts/ThemedContext.tsx";
+import ThemedContext from "../redux/contexts/ThemedContext.tsx";
 import {ThemeEnum} from "../utils/globalTypes.ts";
 import {useAppSelector} from "../redux";
 

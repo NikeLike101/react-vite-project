@@ -3,7 +3,7 @@ import Checkbox from "../../components/Checkbox.tsx";
 import {memo, useMemo} from "react";
 import {ReactComponent as IconInfo} from '../../assets/ic_success.svg'
 import {useNavigate} from "react-router-dom";
-import {useThemeContext} from "../../globalContexts/ThemedContext.tsx";
+import {useThemeContext} from "../../redux/contexts/ThemedContext.tsx";
 import {ThemeEnum} from "../../utils/globalTypes.ts";
 import {useDispatch} from "react-redux";
 import {setSelectedProductForModal} from "../../redux/reducers/catalogReducer/actions.ts";

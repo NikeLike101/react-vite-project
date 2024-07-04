@@ -4,5 +4,7 @@ export const enum RoutesEnum {
     catalogSellerPage = '/catalog/:sellerId',
     notFound = '*',
     login = '/login',
-    signup = '/signup'
+    signup = '/signup',
+    login_original = '/login_original',
+    signup_original = '/signup_original'
 }
