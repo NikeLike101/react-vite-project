@@ -46,32 +46,32 @@ const requestFetch:RequestType =async ({url, body,method}) => {
         })
         let dataRaw = await query
 
-        if (!verifyAccessToken(accessToken)?.isSuccess) {
-            const data = refresh(refreshToken)
-            if (!data.isSuccess) {
-                localStorage.removeItem('tokens')
-                return
-            }
-            if (data.tokens === undefined) return;
-             localStorage.setItem('tokens', JSON.stringify(data.tokens))
-             dataRaw = await fetch(url, {
-                 method, body, headers: getHeaders(data.tokens.access)
-             })
-        }
+        // if (!verifyAccessToken(accessToken)?.isSuccess) {
+        //     const data = refresh(refreshToken)
+        //     if (!data.isSuccess) {
+        //         localStorage.removeItem('tokens')
+        //         return
+        //     }
+        //     if (data.tokens === undefined) return;
+        //      localStorage.setItem('tokens', JSON.stringify(data.tokens))
+        //      dataRaw = await fetch(url, {
+        //          method, body, headers: getHeaders(data.tokens.access)
+        //      })
+        // }
 
 
         if (dataRaw.status === 401 && refreshToken)  {
-           // const accessRawToken = await requestFetch({
-           //      url: 'https://studapi.teachmeskills.by/auth/jwt/refresh/',
-           //      method: MethodsEnum.post,
-           //      body: JSON.stringify({refresh: refreshToken})
-           //  })
-           //
-           //
-           //  localStorage.setItem('tokens', JSON.stringify({access: accessRawToken.access, refresh: refreshToken}))
-           //  dataRaw = await fetch(url, {
-           //      method, body, headers: getHeaders(accessRawToken.access)
-           //  })
+           const accessRawToken = await requestFetch({
+                url: 'https://studapi.teachmeskills.by/auth/jwt/refresh/',
+                method: MethodsEnum.post,
+                body: JSON.stringify({refresh: refreshToken})
+            })
+
+
+            localStorage.setItem('tokens', JSON.stringify({access: accessRawToken.access, refresh: refreshToken}))
+            dataRaw = await fetch(url, {
+                method, body, headers: getHeaders(accessRawToken.access)
+            })
 
         }
         if (dataRaw.status === 204) return {isSuccess: true}

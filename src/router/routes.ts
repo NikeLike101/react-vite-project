@@ -6,5 +6,6 @@ export const enum RoutesEnum {
     login = '/login',
     signup = '/signup',
     login_original = '/login_original',
-    signup_original = '/signup_original'
+    signup_original = '/signup_original',
+    posts='/posts'
 }

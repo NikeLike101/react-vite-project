@@ -10,6 +10,7 @@ import createSagaMiddleware from 'redux-saga'
 import {thunk} from "redux-thunk";
 import productItemSliceReducer from "./reducers/productItemReducer/productItemSliceReducer.tsx";
 import {appWatcher} from "./saga";
+import postsReducer from "./reducers/postsReducer/index.ts";
 
 const persistConfig = {
     key: 'redux',
@@ -17,12 +18,12 @@ const persistConfig = {
 }
 
 
-
 const appReducer = combineReducers({
     charsReducer ,
     catalogReducer,
     themeReducer,
-    productItemSliceReducer
+    productItemSliceReducer,
+    postsReducer
 })
 
 
@@ -45,7 +46,7 @@ sagaMiddleware.run(appWatcher)
 
 type DefaultActionType = {type:  string, payload: any }
 export type ActionType<EnumOfTypes> = {type: EnumOfTypes | string, payload: any }
-type AppStateType = ReturnType<typeof appReducer>
+export type AppStateType = ReturnType<typeof appReducer>
 type AppDispatchType = ThunkDispatch<AppStateType, null, DefaultActionType>
 
 export type ThunkActionType  = ThunkAction<void, AppStateType, null, DefaultActionType>

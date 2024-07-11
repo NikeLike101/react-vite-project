@@ -1,9 +1,10 @@
-import Button from "./Button.tsx";
-import {ThemeEnum} from "../utils/globalTypes.ts";
+import Button from "../Button.tsx";
+import {ThemeEnum} from "../../utils/globalTypes.ts";
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {changeTheme} from "../redux/reducers/themeReducer.ts";
-import {appReducer, AppStateType, useAppSelector} from "../redux";
+import {changeTheme} from "../../redux/reducers/themeReducer.ts";
+import {appReducer, AppStateType, useAppSelector} from "../../redux";
+import {headerLinks} from "./data.ts";
 
 
 const Header = () => {
@@ -27,9 +28,7 @@ const Header = () => {
 
 
     return <div style={{display: 'flex', gap: '8px', padding: 8, borderBottom: '3px solid #CCC', marginBottom: 12}}>
-        <Button title="Home page" link={'/home'} onClick={handleOpenHome}/>
-        {b}
-        <Button title="Catalog page" link={'/catalog'} onClick={handleOpenCatalog}/>
+        {headerLinks.map(headerLink => <Button  onClick={() => navigation(headerLink.link)} link={headerLink.link} title={headerLink.title}/>)}
         <Button title="Switch theme" onClick={handleSwitchTheme}/>
         <Button title={'Log out'} onClick={handleLogout}/>
     </div>
